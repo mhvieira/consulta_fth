@@ -249,26 +249,10 @@
 
                     console.log("RESPOSTA DA API RECEBIDA:", data); // <--- ADICIONE ESTA LINHA!
                     
-                    // 1. Determinar a classe CSS com base no "status"
-                    // Se o status contiver a palavra "TROCA", será vermelho. Caso contrário, verde.
-                    const status = data.status || "Status não informado";
-                    const resultClass = status.includes('TROCA') ? 'resultado-sim' : 'resultado-nao';
-                    
-                    // 2. Montar o HTML com todos os detalhes retornados pela API
+                    const resultClass = data.needs_replacement === 'Sim' ? 'resultado-sim' : 'resultado-nao';
                     resultadoIndividualDiv.innerHTML = `
-                        <div style="text-align: left; width: 100%;">
-                            <strong>Matrícula:</strong> ${data.dados_entrada.hidrometro} <br>
-                            <strong>Status:</strong> <span class="${resultClass}">${status}</span> <br>
-                            <hr style="border-top: 1px solid #eee; margin: 10px 0;">
-                            <strong>Recomendação:</strong> ${data.recomendacao} <br>
-                            <br>
-                            <strong>Detalhes do Cálculo:</strong>
-                            <ul style="margin: 5px 0 0 20px; padding: 0;">
-                                <li>Fator de Idade (FI): ${data.fator_idade_fi.toFixed(4)}</li>
-                                <li>Fator de Totalização (FR): ${data.fator_totalizacao_fr.toFixed(4)}</li>
-                                <li><strong>Fator de Troca (FT): ${data.fator_troca_ft.toFixed(4)}</strong></li>
-                            </ul>
-                        </div>
+                        <strong>Matrícula:</strong> ${data.hidrometro} <br>
+                        <strong>Necessita Troca:</strong> <span class="${resultClass}">${data.needs_replacement}</span>
                     `;
 
                 } catch (error) {
