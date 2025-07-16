@@ -227,19 +227,37 @@
                     }
 
                     const data = await response.json();
-
-                    console.log("RESPOSTA DA API RECEBIDA:", data); // <--- ADICIONE ESTA LINHA!
                     
-                    const resultClass = data.needs_replacement === 'Sim' ? 'resultado-sim' : 'resultado-nao';
+                    // --- INÍCIO DA MUDANÇA ---
+                    
+                    // 1. Determina a classe CSS com base no "status" retornado pela API
+                    const status = data.status || "Status não informado";
+                    const resultClass = status.includes('TROCA') ? 'resultado-sim' : 'resultado-nao';
+
+                    // 2. Monta o HTML com todos os detalhes da resposta, formatando os números
                     resultadoIndividualDiv.innerHTML = `
-                        <strong>Matrícula:</strong> ${data.hidrometro} <br>
-                        <strong>Necessita Troca:</strong> <span class="${resultClass}">${data.needs_replacement}</span>
+                        <div style="text-align: left; width: 100%;">
+                            <strong>Matrícula:</strong> ${data.dados_entrada.hidrometro} <br>
+                            <strong>Status:</strong> <span class="${resultClass}">${status}</span> <br>
+                            <hr style="border-top: 1px solid #eee; margin: 10px 0;">
+                            <strong>Recomendação:</strong> ${data.recomendacao} <br>
+                            <br>
+                            <strong>Detalhes do Cálculo:</strong>
+                            <ul style="margin: 5px 0 0 20px; padding: 0;">
+                                <li>Idade do Equipamento: ${data.idade_instalado_anos.toFixed(2)} anos</li>
+                                <li>Fator de Idade (FI): ${data.fator_idade_fi.toFixed(4)}</li>
+                                <li>Fator de Totalização (FR): ${data.fator_totalizacao_fr.toFixed(4)}</li>
+                                <li><strong>Fator de Troca (FT): ${data.fator_troca_ft.toFixed(4)}</strong></li>
+                            </ul>
+                        </div>
                     `;
+                    // --- FIM DA MUDANÇA ---
 
                 } catch (error) {
                     resultadoIndividualDiv.innerHTML = `<span class="error">Falha na consulta: ${error.message}</span>`;
                 }
             });
+        });
     </script>
 </body>
 </html>
