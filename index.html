@@ -201,7 +201,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const API_BASE_URL = 'https://api-fth.onrender.com/calcular-fator-troca';
+            const API_BASE_URL = 'https://api-fth.onrender.com';
 
             // --- LÓGICA PARA CONSULTA INDIVIDUAL ---
             const formIndividual = document.getElementById('formIndividual');
@@ -231,7 +231,7 @@
                 resultadoIndividualDiv.innerHTML = `<span class="loading">Consultando hidrômetro ${matricula}...</span>`;
 
                 try {
-                    const response = await fetch(`${API_BASE_URL}`, { // Endpoint para predição individual
+                    const response = await fetch(`${API_BASE_URL}/calcular-fator-troca`, { // Endpoint para predição individual
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
