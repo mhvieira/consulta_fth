@@ -123,35 +123,6 @@
             padding: 2px 6px;
             border-radius: 4px;
         }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-
-        th, td {
-            padding: 12px;
-            border: 1px solid #ddd;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-            font-weight: 600;
-        }
-
-        tbody tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        
-        .csv-instructions {
-            background-color: #eef7ff;
-            border-left: 4px solid #1c5d99;
-            padding: 15px;
-            border-radius: 4px;
-            font-size: 0.9em;
-        }
     </style>
 </head>
 <body>
@@ -200,7 +171,6 @@
                     return;
                 }
                 
-                // Converte a data de YYYY-MM-DD para YYYYMMDD, como esperado pela API
                 const dataFormatada = dataInstalacao.replace(/-/g, '');
 
                 const payload = {
@@ -212,7 +182,7 @@
                 resultadoIndividualDiv.innerHTML = `<span class="loading">Consultando hidrômetro ${matricula}...</span>`;
 
                 try {
-                    const response = await fetch(`${API_BASE_URL}/calcular-fator-troca`, { // Endpoint para predição individual
+                    const response = await fetch(`${API_BASE_URL}/calcular-fator-troca`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -228,13 +198,9 @@
 
                     const data = await response.json();
                     
-                    // --- INÍCIO DA MUDANÇA ---
-                    
-                    // 1. Determina a classe CSS com base no "status" retornado pela API
                     const status = data.status || "Status não informado";
                     const resultClass = status.includes('TROCA') ? 'resultado-sim' : 'resultado-nao';
 
-                    // 2. Monta o HTML com todos os detalhes da resposta, formatando os números
                     resultadoIndividualDiv.innerHTML = `
                         <div style="text-align: left; width: 100%;">
                             <strong>Matrícula:</strong> ${data.dados_entrada.hidrometro} <br>
@@ -251,9 +217,7 @@
                             </ul>
                         </div>
                     `;
-                    // --- FIM DA MUDANÇA ---
-
-                } catch (error) {
+                } catch (error) { // <-- O '}' ANTES DESTE CATCH ESTAVA FALTANDO
                     resultadoIndividualDiv.innerHTML = `<span class="error">Falha na consulta: ${error.message}</span>`;
                 }
             });
