@@ -178,25 +178,6 @@
                 Aguardando consulta...
             </div>
         </section>
-
-        <!-- SEÇÃO DE CONSULTA EM LOTE 
-        <section id="batch-query">
-            <h2>Consulta em Lote por CSV</h2>
-            <div class="csv-instructions">
-                <p><strong>Instruções:</strong> O arquivo CSV deve conter as colunas <strong><code>hidrometro</code></strong>, <strong><code>dt_instalacao</code></strong> e <strong><code>totalizacao</code></strong> na primeira linha.</p>
-                <p>A data de instalação deve estar no formato <strong>AAAA-MM-DD</strong>.</p>
-                <p>Exemplo de conteúdo do arquivo <code>hidrometros.csv</code>:</p>
-                <pre>hidrometro,dt_instalacao,totalizacao<br>A99A123456,2018-05-20,5432<br>B11B654321,2022-01-15,123<br>C22C987654,2015-11-01,9876</pre>
-            </div>
-            <form id="formLote">
-                <label for="csvFile">Selecione o arquivo CSV:</label>
-                <input type="file" id="csvFile" name="csvFile" accept=".csv" required>
-                <button type="submit">Consultar Lote</button>
-            </form>
-            <div id="resultadoLote" class="result-area">
-                Aguardando upload do arquivo...
-            </div>
-        </section>-->
     </div>
 
     <script>
@@ -259,78 +240,6 @@
                     resultadoIndividualDiv.innerHTML = `<span class="error">Falha na consulta: ${error.message}</span>`;
                 }
             });
-/*
-            // --- LÓGICA PARA CONSULTA EM LOTE ---
-            const formLote = document.getElementById('formLote');
-            const csvFileInput = document.getElementById('csvFile');
-            const resultadoLoteDiv = document.getElementById('resultadoLote');
-
-            formLote.addEventListener('submit', async (event) => {
-                event.preventDefault();
-                const file = csvFileInput.files[0];
-                if (!file) {
-                    resultadoLoteDiv.innerHTML = `<span class="error">Por favor, selecione um arquivo CSV.</span>`;
-                    return;
-                }
-
-                resultadoLoteDiv.innerHTML = `<span class="loading">Processando o arquivo ${file.name}...</span>`;
-
-                const formData = new FormData();
-                formData.append('file', file);
-
-                try {
-                    const response = await fetch(`${API_BASE_URL}`, {
-                        method: 'POST',
-                        body: formData
-                    });
-
-                    if (!response.ok) {
-                         const errorData = await response.json().catch(() => null);
-                        const errorMessage = errorData?.detail || `Erro ${response.status}: ${response.statusText}`;
-                        throw new Error(errorMessage);
-                    }
-
-                    const data = await response.json();
-                    
-                    if (!data.predictions || data.predictions.length === 0) {
-                        resultadoLoteDiv.innerHTML = 'Nenhum resultado retornado pela API.';
-                        return;
-                    }
-
-                    displayBatchResults(data.predictions);
-
-                } catch (error) {
-                    resultadoLoteDiv.innerHTML = `<span class="error">Falha no processamento do lote: ${error.message}</span>`;
-                }
-            });
-
-            function displayBatchResults(predictions) {
-                let tableHTML = `
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Matrícula</th>
-                                <th>Necessita Troca</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                `;
-
-                predictions.forEach(result => {
-                    const resultClass = result.needs_replacement === 'Sim' ? 'resultado-sim' : 'resultado-nao';
-                    tableHTML += `
-                        <tr>
-                            <td>${result.hidrometro}</td>
-                            <td><span class="${resultClass}">${result.needs_replacement}</span></td>
-                        </tr>
-                    `;
-                });
-
-                tableHTML += `</tbody></table>`;
-                resultadoLoteDiv.innerHTML = tableHTML;
-            }
-        });
-        */
     </script>
 </body>
 </html>
