@@ -231,7 +231,7 @@
                 resultadoIndividualDiv.innerHTML = `<span class="loading">Consultando hidrômetro ${matricula}...</span>`;
 
                 try {
-                    const response = await fetch(`${API_BASE_URL}/predict`, { // Endpoint para predição individual
+                    const response = await fetch(`${API_BASE_URL}`, { // Endpoint para predição individual
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -277,7 +277,7 @@
                 formData.append('file', file);
 
                 try {
-                    const response = await fetch(`${API_BASE_URL}/predict_csv`, {
+                    const response = await fetch(`${API_BASE_URL}`, {
                         method: 'POST',
                         body: formData
                     });
