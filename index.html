@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consulta de Troca de Hidrômetro</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 700px;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #1c5d99;
+        }
+
+        h1 {
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            margin-top: 40px;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        label {
+            font-weight: 600;
+        }
+
+        input[type="text"], input[type="date"], input[type="number"], input[type="file"] {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+        
+        input[type="date"] {
+            -webkit-appearance: none;
+        }
+
+        input[type="file"] {
+            cursor: pointer;
+        }
+
+        button {
+            background-color: #2a9d8f;
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #268b80;
+        }
+
+        .result-area {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            background-color: #f9f9f9;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1em;
+            word-break: break-all;
+            flex-direction: column;
+            line-height: 1.6;
+        }
+        
+        .loading {
+            color: #666;
+            font-style: italic;
+        }
+
+        .error {
+            color: #d90429;
+            font-weight: bold;
+        }
+
+        .resultado-sim {
+            color: #d90429;
+            font-weight: bold;
+            background-color: #ffcccc;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+
+        .resultado-nao {
+            color: #008000;
+            font-weight: bold;
+            background-color: #ccffcc;
+            padding: 2px 6px;
+            border-radius: 4px;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            font-weight: 600;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .csv-instructions {
+            background-color: #eef7ff;
+            border-left: 4px solid #1c5d99;
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Consulta de Troca de Hidrômetro</h1>
+
+        <!-- SEÇÃO DE CONSULTA INDIVIDUAL -->
+        <section id="individual-query">
+            <h2>Consulta Individual</h2>
+            <form id="formIndividual">
+                <label for="hidrometroMatricula">Matrícula do Hidrômetro:</label>
+                <input type="text" id="hidrometroMatricula" placeholder="Ex: A99A123456" required>
+
+                <label for="dataInstalacao">Data de Instalação:</label>
+                <input type="date" id="dataInstalacao" required>
+
+                <label for="leituraAtual">Leitura Atual (Totalização em m³):</label>
+                <input type="number" id="leituraAtual" placeholder="Ex: 1234" required>
+
+                <button type="submit">Consultar</button>
+            </form>
+            <div id="resultadoIndividual" class="result-area">
+                Aguardando consulta...
+            </div>
+        </section>
+
+        <!-- SEÇÃO DE CONSULTA EM LOTE -->
+        <section id="batch-query">
+            <h2>Consulta em Lote por CSV</h2>
+            <div class="csv-instructions">
+                <p><strong>Instruções:</strong> O arquivo CSV deve conter as colunas <strong><code>hidrometro</code></strong>, <strong><code>dt_instalacao</code></strong> e <strong><code>totalizacao</code></strong> na primeira linha.</p>
+                <p>A data de instalação deve estar no formato <strong>AAAA-MM-DD</strong>.</p>
+                <p>Exemplo de conteúdo do arquivo <code>hidrometros.csv</code>:</p>
+                <pre>hidrometro,dt_instalacao,totalizacao<br>A99A123456,2018-05-20,5432<br>B11B654321,2022-01-15,123<br>C22C987654,2015-11-01,9876</pre>
+            </div>
+            <form id="formLote">
+                <label for="csvFile">Selecione o arquivo CSV:</label>
+                <input type="file" id="csvFile" name="csvFile" accept=".csv" required>
+                <button type="submit">Consultar Lote</button>
+            </form>
+            <div id="resultadoLote" class="result-area">
+                Aguardando upload do arquivo...
+            </div>
+        </section>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const API_BASE_URL = 'https://api-fth.onrender.com';
+
+            // --- LÓGICA PARA CONSULTA INDIVIDUAL ---
+            const formIndividual = document.getElementById('formIndividual');
+            const resultadoIndividualDiv = document.getElementById('resultadoIndividual');
+
+            formIndividual.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                
+                const matricula = document.getElementById('hidrometroMatricula').value.trim();
+                const dataInstalacao = document.getElementById('dataInstalacao').value; // Formato YYYY-MM-DD
+                const leitura = parseInt(document.getElementById('leituraAtual').value, 10);
+
+                if (!matricula || !dataInstalacao || isNaN(leitura)) {
+                    resultadoIndividualDiv.innerHTML = `<span class="error">Por favor, preencha todos os campos corretamente.</span>`;
+                    return;
+                }
+                
+                // Converte a data de YYYY-MM-DD para YYYYMMDD, como esperado pela API
+                const dataFormatada = dataInstalacao.replace(/-/g, '');
+
+                const payload = {
+                    hidrometro: matricula,
+                    dt_instalacao: dataFormatada,
+                    totalizacao: leitura
+                };
+
+                resultadoIndividualDiv.innerHTML = `<span class="loading">Consultando hidrômetro ${matricula}...</span>`;
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/predict`, { // Endpoint para predição individual
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(payload)
+                    });
+                    
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => null);
+                        const errorMessage = errorData?.detail || `Erro ${response.status}: ${response.statusText}`;
+                        throw new Error(errorMessage);
+                    }
+
+                    const data = await response.json();
+                    
+                    const resultClass = data.needs_replacement === 'Sim' ? 'resultado-sim' : 'resultado-nao';
+                    resultadoIndividualDiv.innerHTML = `
+                        <strong>Matrícula:</strong> ${data.hidrometro} <br>
+                        <strong>Necessita Troca:</strong> <span class="${resultClass}">${data.needs_replacement}</span>
+                    `;
+
+                } catch (error) {
+                    resultadoIndividualDiv.innerHTML = `<span class="error">Falha na consulta: ${error.message}</span>`;
+                }
+            });
+
+            // --- LÓGICA PARA CONSULTA EM LOTE ---
+            const formLote = document.getElementById('formLote');
+            const csvFileInput = document.getElementById('csvFile');
+            const resultadoLoteDiv = document.getElementById('resultadoLote');
+
+            formLote.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                const file = csvFileInput.files[0];
+                if (!file) {
+                    resultadoLoteDiv.innerHTML = `<span class="error">Por favor, selecione um arquivo CSV.</span>`;
+                    return;
+                }
+
+                resultadoLoteDiv.innerHTML = `<span class="loading">Processando o arquivo ${file.name}...</span>`;
+
+                const formData = new FormData();
+                formData.append('file', file);
+
+                try {
+                    const response = await fetch(`${API_BASE_URL}/predict_csv`, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) {
+                         const errorData = await response.json().catch(() => null);
+                        const errorMessage = errorData?.detail || `Erro ${response.status}: ${response.statusText}`;
+                        throw new Error(errorMessage);
+                    }
+
+                    const data = await response.json();
+                    
+                    if (!data.predictions || data.predictions.length === 0) {
+                        resultadoLoteDiv.innerHTML = 'Nenhum resultado retornado pela API.';
+                        return;
+                    }
+
+                    displayBatchResults(data.predictions);
+
+                } catch (error) {
+                    resultadoLoteDiv.innerHTML = `<span class="error">Falha no processamento do lote: ${error.message}</span>`;
+                }
+            });
+
+            function displayBatchResults(predictions) {
+                let tableHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Matrícula</th>
+                                <th>Necessita Troca</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                predictions.forEach(result => {
+                    const resultClass = result.needs_replacement === 'Sim' ? 'resultado-sim' : 'resultado-nao';
+                    tableHTML += `
+                        <tr>
+                            <td>${result.hidrometro}</td>
+                            <td><span class="${resultClass}">${result.needs_replacement}</span></td>
+                        </tr>
+                    `;
+                });
+
+                tableHTML += `</tbody></table>`;
+                resultadoLoteDiv.innerHTML = tableHTML;
+            }
+        });
+    </script>
+</body>
+</html>
