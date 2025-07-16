@@ -246,6 +246,8 @@
                     }
 
                     const data = await response.json();
+
+                    console.log("RESPOSTA DA API RECEBIDA:", data); // <--- ADICIONE ESTA LINHA!
                     
                     const resultClass = data.needs_replacement === 'Sim' ? 'resultado-sim' : 'resultado-nao';
                     resultadoIndividualDiv.innerHTML = `
